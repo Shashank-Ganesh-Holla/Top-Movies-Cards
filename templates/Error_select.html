@@ -12,8 +12,13 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="heading">Select Movie</h1>
-    <p> <h1><em>{{movie.title}}</em> is already in the list</h1> </p> <br>
+    {% if message == True: %}
+    <h1 class="heading">Oops ! List Full</h1>
+    <p> <h3>Your Top 10 list is full, Please delete any of the movies from the list if you want to add more.</h3> </p> <br>
+    {% else: %}
+    <h1 class="heading">{{movie.title}}</h1>
+    <p> <h3><em>{{movie.title}}</em> is already in the list</h3> </p> <br>
+    {% endif %}
     <a class="btn btn-primary" type="submit" href="{{url_for('home')}}">Home</a><br><br>
 
 {% endblock %}
