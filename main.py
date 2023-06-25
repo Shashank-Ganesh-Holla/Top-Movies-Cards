@@ -3,7 +3,7 @@ from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, FloatField
-from wtforms.validators import DataRequired, InputRequired, NumberRange
+from wtforms.validators import InputRequired, NumberRange, Optional
 from imdb import Cinemagoer, IMDbError
 import os
 
@@ -32,7 +32,8 @@ class Movie(db.Model):
 
 
 class RateMovieForm(FlaskForm):
-    rating = StringField(label="Your Rating Out of 10 e.g. 7.5", render_kw={"autocomplete": "off"})
+    rating = FloatField(label="Your Rating Out of 10 e.g. 7.5", render_kw={"autocomplete": "off"},
+                        validators=[Optional(), NumberRange(min=1, max=10, message="Rating must be between 1 and 10.")])
     review = StringField(label="Your Review", render_kw={"autocomplete": "off"})
     submit = SubmitField(label="Done")
 
@@ -51,12 +52,12 @@ def home():
         db.create_all()
     movie_list = Movie.query.order_by(Movie.rating).all()
     # sorted_list = db.session.query(Movie).order_by(Movie.rating.asc())
-    # print(movie_list)
     i = len(movie_list)
     for movie in movie_list:
         # print(movie)
         movie.ranking = i
         i -= 1
+        db.session.commit()
     return render_template("index.html", movie=movie_list)
 
 
@@ -66,11 +67,12 @@ def edit():
     form = RateMovieForm()
     movie = db.session.get(Movie, id_movie)
     if form.validate_on_submit():
-        if form.rating.data:  movie.rating = form.rating.data
+        print(form.rating.data)
+        if form.review.data:
+            movie.review = form.review.data
+        if form.rating.data:
+            movie.rating = form.rating.data
 
-        if form.review.data: movie.review = form.review.data
-        # movie.rating = request.form.get('rating')
-        # movie.review = request.form.get('review')
         db.session.commit()
         return redirect(url_for('home'))
 
@@ -94,8 +96,8 @@ def add():
         movie_title = add_form.movie_title.data
 
         try:
-            ia = Cinemagoer()
-            list_movie = ia.search_movie(movie_title)
+            imd = Cinemagoer()
+            list_movie = imd.search_movie(movie_title)
         except IMDbError as e:
             print(e)
             list_movie = []
@@ -109,9 +111,9 @@ def select():
     movie_id = request.args['id']
 
     try:
-        ia = Cinemagoer()
-        movie_data = ia.get_movie(movie_id)
-        existing_list = db.session.query(Movie).all()
+        movie_imdb = Cinemagoer()
+        movie_data = movie_imdb.get_movie(movie_id)
+        # existing_list = db.session.query(Movie).all()
         existing_list = Movie.query.all()
         for movies in existing_list:
             if movies.title == movie_data.get('title'):
