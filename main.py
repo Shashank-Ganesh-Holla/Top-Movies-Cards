@@ -50,6 +50,7 @@ def home():
     if not os.path.exists("movie_list.db"):
         # Create the database file
         db.create_all()
+        db.session.commit()
     movie_list = Movie.query.order_by(Movie.rating).all()
     # sorted_list = db.session.query(Movie).order_by(Movie.rating.asc())
     i = len(movie_list)
