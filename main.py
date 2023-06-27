@@ -92,10 +92,10 @@ def delete():
 
 @app.route('/add', methods=['GET', 'POST'])
 def add():
-    existing_list = Movie.query.all()
-
-    if len(existing_list) >= 10:
-        return render_template('Error_select.html', message=True)
+    # existing_list = Movie.query.all()
+    #
+    # if len(existing_list) >= 10:
+    #     return render_template('Error_select.html', message=True)
 
     add_form = AddMovie()
     if add_form.validate_on_submit():

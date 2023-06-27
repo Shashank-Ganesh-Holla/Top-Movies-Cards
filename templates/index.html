@@ -21,6 +21,7 @@
 
     {% if movie != []: %}
     {% for film in movie: %}
+    {% if film.ranking < 11: %}
     <div class="card">
         <div class="front"
              style="background-image: url({{film.img_url}});">
@@ -28,7 +29,8 @@
         </div>
         <div class="back">
             <div>
-                <div class="title">{{film.title}} <span class="release_date">({{film.year}})</span></div>
+                <div class="title">{{film.title}} <span class="release_date">({{film.year}})</span>
+                </div>
                 <div class="rating">
                     <label>{{film.rating}}</label>
                     <i class="fas fa-star star"></i>
@@ -44,6 +46,8 @@
             </div>
         </div>
     </div>
+
+    {% endif %}
     {% endfor %}
     {% endif %}
 </div>
