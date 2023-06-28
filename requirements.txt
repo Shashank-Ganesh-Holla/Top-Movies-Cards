@@ -1,0 +1,8 @@
+cinemagoer==2023.5.1
+Flask-Bootstrap==3.3.7.1
+Flask-SQLAlchemy==3.0.5
+Flask-WTF==1.1.1
+Flask==2.3.2
+IMDbPY==2022.7.9
+WTForms==3.0.1
+
